@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sorting Visualizer</title>
+ <link rel="stylesheet" href="styles.css">
+    </head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Sorting Visualizer</h1>
+        <div class="muted">Single or compare two algorithms — live counts, complexities, and timings.</div>
+      </div>
+      <div class="controls">
+        <label class="small muted">Array Size
+          <input id="size" type="range" min="10" max="120" value="40" style="width:180px;margin-left:8px">
+        </label>
+        <label class="small muted">Speed
+          <select id="speed" style="margin-left:8px">
+            <option value="250">Slow</option>
+            <option value="80" selected>Medium</option>
+            <option value="12">Fast</option>
+            <option value="0">Instant</option>
+          </select>
+        </label>
+        <button id="shuffle">Shuffle</button>
+        <button id="start">Start</button>
+        <button id="pause">Pause</button>
+        <button id="reset">Reset</button>
+      </div>
+    </header>
+
+    <div class="main">
+      <div class="panel left">
+        <div class="row">
+          <div style="flex:1">
+            <label>Select Mode</label>
+            <select id="mode">
+              <option value="single">Single Algorithm</option>
+              <option value="compare">Compare Two Algorithms</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Algorithms</label>
+          <div class="algo-list">
+            <select id="algo1">
+              <option value="bubble">Bubble Sort</option>
+              <option value="selection">Selection Sort</option>
+              <option value="insertion">Insertion Sort</option>
+              <option value="merge">Merge Sort</option>
+              <option value="quick" selected>Quick Sort</option>
+              <option value="heap">Heap Sort</option>
+            </select>
+            <select id="algo2">
+              <option value="bubble">Bubble Sort</option>
+              <option value="selection">Selection Sort</option>
+              <option value="insertion">Insertion Sort</option>
+              <option value="merge">Merge Sort</option>
+              <option value="quick" selected>Quick Sort</option>
+              <option value="heap">Heap Sort</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Array Type</label>
+          <select id="arrayType">
+            <option value="random">Random</option>
+            <option value="reversed">Reversed</option>
+            <option value="sorted">Sorted</option>
+            <option value="nearly">Nearly Sorted</option>
+          </select>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
+        <div>
+          <label>Info & Complexities</label>
+          <div class="stat small">
+            <div><strong id="name1">Quick Sort</strong></div>
+            <div class="muted">Time: <span id="best1">Ω(n log n)</span> | <span id="avg1">Θ(n log n)</span> | <span id="worst1">O(n^2)</span></div>
+            <div class="muted">Space: <span id="space1">O(log n)</span></div>
+          </div>
+
+          <div id="info2" style="display:none">
+            <div class="stat small">
+              <div><strong id="name2">Quick Sort</strong></div>
+              <div class="muted">Time: <span id="best2">Ω(n log n)</span> | <span id="avg2">Θ(n log n)</span> | <span id="worst2">O(n^2)</span></div>
+              <div class="muted">Space: <span id="space2">O(log n)</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-note">Tip: Choose "Compare Two Algorithms" to run both side-by-side on the same input array.</div>
+      </div>
+
+      <div class="panel" style="flex:2">
+        <div id="singleView">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="muted">Single View</div>
+            <div class="muted small">Comparisons: <span id="comp1">0</span> &nbsp; Swaps: <span id="swp1">0</span> &nbsp; Time: <span id="time1">0ms</span></div>
+          </div>
+          <div id="vis1" class="vis"></div>
+        </div>
+
+        <div id="compareView" style="display:none">
+          <div class="split">
+            <div style="flex:1">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="muted">Left</div><div class="muted small">Comparisons: <span id="compL">0</span> &nbsp; Swaps: <span id="swpL">0</span> &nbsp; Time: <span id="timeL">0ms</span></div></div>
+              <div id="visL" class="vis" style="height:300px"></div>
+            </div>
+            <div style="flex:1">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><div class="muted">Right</div><div class="muted small">Comparisons: <span id="compR">0</span> &nbsp; Swaps: <span id="swpR">0</span> &nbsp; Time: <span id="timeR">0ms</span></div></div>
+              <div id="visR" class="vis" style="height:300px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="flex:0.9">
+        <label>Live Stats</label>
+        <div class="stat">
+          <div><strong>Algorithm</strong>: <span id="liveAlgo">Quick Sort</span></div>
+          <div class="muted">Comparisons: <span id="liveComp">0</span></div>
+          <div class="muted">Swaps: <span id="liveSwap">0</span></div>
+          <div class="muted">Elapsed: <span id="liveTime">0ms</span></div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label>Legend</label>
+          <div class="stat small">
+            <div><span style="display:inline-block;width:12px;height:12px;background:linear-gradient(180deg,var(--accent),#0ea5b7);margin-right:8px;border-radius:2px"></span>Normal Bar</div>
+            <div style="margin-top:6px"><span style="display:inline-block;width:12px;height:12px;background:linear-gradient(180deg,var(--good),#34d399);margin-right:8px;border-radius:2px"></span>Sorted</div>
+            <div style="margin-top:6px"><span style="display:inline-block;width:12px;height:12px;background:rgba(250,204,21,0.8);margin-right:8px;border-radius:2px"></span>Comparing</div>
+            <div style="margin-top:6px"><span style="display:inline-block;width:12px;height:12px;background:rgba(239,68,68,0.8);margin-right:8px;border-radius:2px"></span>Swapping</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Popup Card (hidden by default) -->
+  <div id="resultCard" class="hidden">
+    <div class="modal-backdrop" id="modalBackdrop" style="display:none">
+      <div class="modal" role="dialog" aria-modal="true">
+        <h3>Comparison Result</h3>
+        <div id="resultContent" style="margin-top:8px"></div>
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn" id="closeResultBtn">Close</button>
+          <button class="btn" id="rerunBtn">Run Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+ <script src="script.js"></script>
+
+</body>
+</html>
